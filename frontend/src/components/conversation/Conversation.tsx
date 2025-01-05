@@ -1,5 +1,5 @@
 import { useConversationStore } from "../../store/useConversationStore";
-import ConversationContainer from "./conversationContainer";
+import ConversationContainer from "./ConversationContainer";
 import ConversationSidebar from "./ConversationSidebar";
 
 function Conversation() {
