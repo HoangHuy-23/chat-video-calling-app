@@ -8,8 +8,8 @@ import contactRoutes from "./routes/contact.route.js";
 import friendRequestRoutes from "./routes/friendRequest.route.js";
 import conversationRoutes from "./routes/conversation.route.js";
 import messageRoutes from "./routes/message.route.js";
+import { app, server } from "./lib/socket.js";
 
-const app = express();
 dotenv.config();
 const PORT = process.env.PORT || 5001;
 
@@ -28,7 +28,7 @@ app.use("/api/friend-request", friendRequestRoutes);
 app.use("/api/conversation", conversationRoutes);
 app.use("/api/message", messageRoutes);
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
   connectDB();
 });

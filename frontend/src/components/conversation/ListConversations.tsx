@@ -5,8 +5,13 @@ import ConversationSkeleton from "../skeletons/ConversationSkeleton";
 import ItemConversation from "./ItemConversation";
 
 function ListConversations() {
-  const { conversations, isFetchingConversations, fetchConversations } =
-    useConversationStore();
+  const {
+    conversations,
+    isFetchingConversations,
+    fetchConversations,
+    subscribeToNotification,
+    unsubscribeFromNotification,
+  } = useConversationStore();
   const { user } = useAuthStore();
 
   useEffect(() => {
@@ -14,6 +19,13 @@ function ListConversations() {
       fetchConversations();
     }
   }, [user, fetchConversations]);
+
+  useEffect(() => {
+    subscribeToNotification();
+    return () => {
+      unsubscribeFromNotification();
+    };
+  }, [subscribeToNotification, unsubscribeFromNotification, conversations]);
   return (
     <div className="w-full h-full scroll">
       <div className="flex px-4 justify-between items-center border-b border-base-300">
@@ -33,7 +45,7 @@ function ListConversations() {
                 <ItemConversation
                   key={conversation._id}
                   conversation={conversation}
-                  user={user}
+                  user={user!}
                 />
               ))
             ) : (

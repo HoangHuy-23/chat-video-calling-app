@@ -50,3 +50,9 @@ export type MessageResponse = {
   status: string;
   createdAt: string;
 };
+
+// socket.io-client
+export type SocketUser = {
+  userId: string;
+  socketId: string;
+};

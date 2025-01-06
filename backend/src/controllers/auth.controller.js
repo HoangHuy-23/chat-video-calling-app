@@ -95,8 +95,15 @@ export const login = async (req, res) => {
   }
 };
 
-export const logout = (req, res) => {
+export const logout = async (req, res) => {
   try {
+    const userId = req.user._id;
+    const response = await User.findByIdAndUpdate(userId, {
+      lastSeen: new Date(),
+    });
+    if (!response) {
+      return res.status(400).json({ error: "User not found" });
+    }
     res.cookie("jwt", "", { maxAge: 0 });
     return res.status(200).json({ message: "Logged out successfully" });
   } catch (error) {

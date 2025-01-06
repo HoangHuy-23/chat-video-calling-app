@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import RightBarConversation from "./RightBarConversation";
 import HeaderConversation from "./HeaderConversation";
 import { useConversationStore } from "../../store/useConversationStore";
@@ -9,15 +9,38 @@ import { formatMessageTime } from "../../lib/utils";
 
 function ConversationContainer() {
   const [isOpenRightBar, setIsOpenRightBar] = useState(false);
-  const { selectedConversation, messages, isFetchingMessages, fetchMessages } =
-    useConversationStore();
+  const {
+    selectedConversation,
+    messages,
+    isFetchingMessages,
+    fetchMessages,
+    subscribeToMessage,
+    unsubscribeFromMessage,
+  } = useConversationStore();
   const { user } = useAuthStore();
+
+  const messageEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (selectedConversation) {
       fetchMessages(selectedConversation._id);
+      subscribeToMessage();
     }
-  }, [selectedConversation]);
+    return () => {
+      unsubscribeFromMessage();
+    };
+  }, [
+    selectedConversation,
+    fetchMessages,
+    subscribeToMessage,
+    unsubscribeFromMessage,
+  ]);
+
+  useEffect(() => {
+    if (messageEndRef.current && messages) {
+      messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
 
   if (isFetchingMessages) {
     return (
@@ -58,19 +81,19 @@ function ConversationContainer() {
         />
         <div className="h-[calc(100vh-10rem)] overflow-y-auto space-y-4 p-4">
           {selectedConversation &&
-            messages.map((message) => (
+            messages.map((message, idx) => (
               <div
-                key={message._id}
+                key={idx}
                 className={`chat ${
-                  message.senderId._id === user._id ? "chat-end" : "chat-start"
+                  message.senderId._id === user?._id ? "chat-end" : "chat-start"
                 }`}
-                // ref={messageEndRef}
+                ref={messageEndRef}
               >
                 <div className="chat-image avatar">
                   <div className="size-10 rounded-full border">
                     <img
                       src={
-                        message.senderId._id === user._id
+                        message.senderId._id === user?._id
                           ? user.profilePic || "/avatar.png"
                           : message.senderId.profilePic || "/avatar.png"
                       }
@@ -85,7 +108,7 @@ function ConversationContainer() {
                 </div>
                 <div
                   className={`chat-bubble flex flex-col ${
-                    message.senderId._id === user._id
+                    message.senderId._id === user?._id
                       ? "bg-primary text-base-100"
                       : "bg-base-300 text-base-content"
                   }`}
