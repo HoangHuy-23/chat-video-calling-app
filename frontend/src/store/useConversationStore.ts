@@ -12,9 +12,10 @@ interface iConversationStore {
   messages: MessageResponse[];
   isFetchingMessages: boolean;
   fetchMessages: (conversationId: string) => Promise<void>;
+  sendMessage: (message: string) => Promise<void>;
 }
 
-export const useConversationStore = create<iConversationStore>((set) => ({
+export const useConversationStore = create<iConversationStore>((set, get) => ({
   conversations: [],
   selectedConversation: null,
   isFetchingConversations: false,
@@ -48,6 +49,25 @@ export const useConversationStore = create<iConversationStore>((set) => ({
       toast.error("Failed to fetch messages");
     } finally {
       set({ isFetchingMessages: false });
+    }
+  },
+
+  sendMessage: async (message) => {
+    try {
+      const conversationId = get().selectedConversation?._id;
+      if (!conversationId) {
+        console.error("No conversation selected");
+        toast.error("No conversation selected");
+        return;
+      }
+      const response = await axiosInstance.post("message", {
+        conversationId: conversationId,
+        content: message,
+      });
+      set((state) => ({ messages: [...state.messages, response.data] }));
+    } catch (error) {
+      console.error("Failed to send message:", error);
+      toast.error("Failed to send message");
     }
   },
 }));

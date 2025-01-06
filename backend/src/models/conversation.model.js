@@ -27,9 +27,15 @@ const conversationSchema = new mongoose.Schema(
         ref: "User",
       },
     ],
-    timeOfNewMessage: {
-      type: Date,
-      default: Date.now,
+    lastMessage: {
+      content: {
+        type: String,
+        default: "",
+      },
+      senderId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
     },
   },
   {

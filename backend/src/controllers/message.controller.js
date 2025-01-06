@@ -27,9 +27,24 @@ export const sendMessage = async (req, res) => {
         .map((member) => member._id),
     });
 
-    await message.save();
+    const response = await message.save();
 
-    res.status(201).json(message);
+    // update conversation
+    await Conversation.findByIdAndUpdate(conversationId, {
+      lastMessage: {
+        content,
+        senderId: userId,
+      },
+    });
+
+    const messageResponse = response.toObject();
+    messageResponse.senderId = {
+      _id: req.user._id,
+      name: req.user.name,
+      profilePic: req.user.profilePic,
+    };
+
+    res.status(201).json(messageResponse);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server Error" });

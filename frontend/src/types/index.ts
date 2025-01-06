@@ -24,13 +24,19 @@ export type Member = {
   lastSeen?: string;
 };
 
+export type lastMessage = {
+  content: string;
+  senderId: string;
+};
+
 export type Conversation = {
   _id: string;
   profilePic: string;
   isGroup: boolean;
   members: Member[];
   createdAt: string;
-  timeOfNewMessage: string;
+  lastMessage: lastMessage;
+  updatedAt: string;
 };
 
 export type MessageResponse = {

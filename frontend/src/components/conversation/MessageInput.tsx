@@ -1,5 +1,7 @@
 import { Image, Send, X } from "lucide-react";
 import { useRef, useState } from "react";
+import { useConversationStore } from "../../store/useConversationStore";
+import toast from "react-hot-toast";
 
 function MessageInput() {
   const [message, setMessage] = useState("");
@@ -7,8 +9,20 @@ function MessageInput() {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleSendMessage = () => {
-    console.log("send message");
+  const { selectedConversation, sendMessage } = useConversationStore();
+
+  const handleSendMessage = async (e: React.FormEvent<HTMLElement>) => {
+    e.preventDefault();
+    if (!message.trim() && !imagePreview) {
+      return;
+    }
+    try {
+      await sendMessage(message);
+      setMessage("");
+    } catch (error) {
+      toast.error("Failed to send message");
+      console.error("Failed to send message:", error);
+    }
   };
 
   const handleTyping = () => {

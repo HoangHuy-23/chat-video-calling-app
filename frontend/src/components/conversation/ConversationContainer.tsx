@@ -56,7 +56,7 @@ function ConversationContainer() {
           selectedConversation={selectedConversation}
           user={user}
         />
-        <div className="h-[calc(100vh-10rem)] overflow-y-auto space-y-4">
+        <div className="h-[calc(100vh-10rem)] overflow-y-auto space-y-4 p-4">
           {selectedConversation &&
             messages.map((message) => (
               <div
@@ -83,7 +83,13 @@ function ConversationContainer() {
                     {formatMessageTime(message.createdAt)}
                   </time>
                 </div>
-                <div className="chat-bubble flex flex-col">
+                <div
+                  className={`chat-bubble flex flex-col ${
+                    message.senderId._id === user._id
+                      ? "bg-primary text-base-100"
+                      : "bg-base-300 text-base-content"
+                  }`}
+                >
                   {message.media && (
                     <img
                       src={message.media}

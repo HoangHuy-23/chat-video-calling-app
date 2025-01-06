@@ -34,17 +34,18 @@ function ItemConversation({ conversation, user }: ItemConversationProps) {
         <div>
           <h3 className="text-sm font-semibold">
             {
-              selectedConversation?.members.find(
-                (member) => member._id !== user?._id
-              )?.name
+              conversation?.members.find((member) => member._id !== user?._id)
+                ?.name
             }
           </h3>
-          <p className="text-xs text-base-content mt-1">Helloo</p>
+          <p className="text-xs text-base-content mt-1">
+            {" "}
+            {conversation.lastMessage.senderId === user._id ? "You: " : ""}
+            {conversation.lastMessage.content}
+          </p>
         </div>
       </div>
-      <span className="text-xs">
-        {DateTimeFormat(conversation.timeOfNewMessage)}
-      </span>
+      <span className="text-xs">{DateTimeFormat(conversation.updatedAt)}</span>
     </div>
   );
 }

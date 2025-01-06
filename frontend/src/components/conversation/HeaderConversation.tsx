@@ -16,7 +16,7 @@ function HeaderConversation({
   user,
 }: HeaderConversationProps) {
   return (
-    <div className="flex items-center justify-between p-2 border-b">
+    <div className="flex items-center justify-between p-2 border-b border-base-300">
       {/* left */}
       <div className="flex items-start gap-2">
         {!selectedConversation?.isGroup && (
@@ -27,7 +27,7 @@ function HeaderConversation({
               )?.profilePic || "/avatar.png"
             }
             alt="profile"
-            className="w-10 h-10 rounded-full"
+            className="size-12 rounded-full"
           />
         )}
         <div>
@@ -41,7 +41,7 @@ function HeaderConversation({
 
           <span className="text-xs">
             Last seen{" "}
-            {DateTimeFormat(selectedConversation?.timeOfNewMessage as string)}
+            {DateTimeFormat(selectedConversation?.updatedAt as string)}
           </span>
         </div>
       </div>
