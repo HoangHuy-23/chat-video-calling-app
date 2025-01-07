@@ -6,7 +6,7 @@ export const getMyContacts = async (req, res) => {
 
     const contacts = await Contact.findOne({
       userId,
-    }).populate("contacts.userId", "_id name profilePic lastSeen");
+    }).populate("contacts.userId", "_id name email profilePic lastSeen");
 
     if (!contacts) {
       return res.status(400).json({ error: "Contacts could not be found" });

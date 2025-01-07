@@ -9,7 +9,6 @@ const conversationSchema = new mongoose.Schema(
     // option if group chat
     profilePic: {
       type: String,
-      default: "",
     },
     isGroup: {
       type: Boolean,

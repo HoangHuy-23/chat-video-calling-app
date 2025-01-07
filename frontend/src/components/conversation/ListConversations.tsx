@@ -27,7 +27,7 @@ function ListConversations() {
     };
   }, [subscribeToNotification, unsubscribeFromNotification, conversations]);
   return (
-    <div className="w-full h-full scroll">
+    <div className="w-full h-full overflow-y-auto">
       <div className="flex px-4 justify-between items-center border-b border-base-300">
         <div className="flex items-center gap-2 ">
           <span className="text-xs border-b-2 border-primary">All</span>

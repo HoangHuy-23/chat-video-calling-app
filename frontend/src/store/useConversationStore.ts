@@ -9,7 +9,7 @@ interface iConversationStore {
   selectedConversation: Conversation | null;
   isFetchingConversations: boolean;
   fetchConversations: () => Promise<void>;
-  setSelectedConversation: (conversation: Conversation) => void;
+  setSelectedConversation: (conversation: Conversation | null) => void;
   messages: MessageResponse[];
   isFetchingMessages: boolean;
   fetchMessages: (conversationId: string) => Promise<void>;
@@ -18,6 +18,11 @@ interface iConversationStore {
   unsubscribeFromMessage: () => void;
   subscribeToNotification: () => void;
   unsubscribeFromNotification: () => void;
+  createConversationAsGroup: (
+    name: string,
+    profilePic: string,
+    members: string[]
+  ) => Promise<void>;
 }
 
 export const useConversationStore = create<iConversationStore>((set, get) => ({
@@ -96,6 +101,24 @@ export const useConversationStore = create<iConversationStore>((set, get) => ({
       toast.error("Failed to send message");
     }
   },
+  // Create a conversation as a group
+  createConversationAsGroup: async (name, profilePic, members) => {
+    try {
+      const response = await axiosInstance.post("conversation/create-group", {
+        name,
+        profilePic,
+        members,
+      });
+      if (!response.data) return;
+      set((state) => ({
+        conversations: [...state.conversations, response.data],
+      }));
+    } catch (error) {
+      console.error("Failed to create conversation:", error);
+      toast.error("Failed to create conversation");
+    }
+  },
+
   subscribeToMessage: () => {
     const socket = useAuthStore.getState().socket;
     if (!socket) return;

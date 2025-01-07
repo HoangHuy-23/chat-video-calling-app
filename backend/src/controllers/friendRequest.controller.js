@@ -20,7 +20,11 @@ export const createFriendRequest = async (req, res) => {
         .json({ error: "Friend request could not be created" });
     }
 
-    return res.status(201).json(friendRequest);
+    const responseFriendRequest = await FriendRequest.findOne({
+      _id: friendRequest._id,
+    }).populate("senderId", "_id name email profilePic lastSeen");
+
+    return res.status(201).json(responseFriendRequest);
   } catch (error) {
     return res.status(500).json({ message: "Server error: " + error.message });
   }
@@ -32,7 +36,7 @@ export const getFriendRequests = async (req, res) => {
     const friendRequests = await FriendRequest.find({
       receiverId: userId,
       status: "pending",
-    }).populate("senderId", "_id name profilePic lastSeen");
+    }).populate("senderId", "_id name email profilePic lastSeen");
 
     if (!friendRequests) {
       return res

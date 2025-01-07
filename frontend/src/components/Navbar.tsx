@@ -6,6 +6,7 @@ import {
   User2,
 } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
+import { useConversationStore } from "../store/useConversationStore";
 
 interface NavbarProps {
   showChat: boolean;
@@ -25,11 +26,12 @@ function Navbar({
   setShowSettings,
 }: NavbarProps) {
   const { user, logout } = useAuthStore();
+  const { setSelectedConversation } = useConversationStore();
   return (
     <header className="bg-primary top-0 left-0 h-full w-[70px] backdrop-blur-lg bg-base-100/80">
       <div className="flex flex-col items-center justify-between h-full py-8">
         {/* top */}
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center gap-4">
           <img
             src={user?.profilePic || "/avatar.png"}
             alt="avatar"
@@ -57,6 +59,7 @@ function Navbar({
               setShowContacts(true);
               setShowChat(false);
               setShowSettings(false);
+              setSelectedConversation(null);
             }}
           >
             <Contact className="size-8 text-base-100" />

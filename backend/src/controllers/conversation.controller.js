@@ -13,6 +13,10 @@ export const createConversationAsGroup = async (req, res) => {
       isGroup: true,
       admin: adminId,
       members: [...members, adminId],
+      lastMessage: {
+        content: "Just created a group",
+        senderId: adminId,
+      },
     });
 
     if (!conversation) {
@@ -21,7 +25,11 @@ export const createConversationAsGroup = async (req, res) => {
         .json({ error: "Conversation could not be created" });
     }
 
-    return res.status(201).json(conversation);
+    const newConversation = await Conversation.findById(
+      conversation._id
+    ).populate("members", "_id name profilePic lastSeen");
+
+    return res.status(201).json(newConversation);
   } catch (error) {
     return res.status(500).json({ message: "Server error: " + error.message });
   }

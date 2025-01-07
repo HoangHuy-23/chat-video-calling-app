@@ -90,6 +90,18 @@ io.on("connection", (socket) => {
       });
     }
   );
+
+  // friend request
+  socket.on("sendFriendRequest", (data) => {
+    const recipient = userSocket.find(
+      (user) => user.userId.toString() === data.receiverId.toString()
+    );
+    console.log("recipient", recipient);
+
+    if (recipient) {
+      io.to(recipient.socketId).emit("getFriendRequest", data);
+    }
+  });
 });
 
 server
