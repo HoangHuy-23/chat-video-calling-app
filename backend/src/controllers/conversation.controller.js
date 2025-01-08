@@ -65,7 +65,7 @@ export const getConversations = async (req, res) => {
       members: userId,
     })
       .populate("members", "_id name profilePic lastSeen")
-      .sort({ timeOfNewMessage: -1 });
+      .sort({ updatedAt: -1 });
 
     if (!conversations) {
       return res

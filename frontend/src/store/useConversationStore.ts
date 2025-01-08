@@ -146,9 +146,11 @@ export const useConversationStore = create<iConversationStore>((set, get) => ({
     if (!socket) return;
     socket.on("getMessage", (message) => {
       console.log("Received message:", message);
-      set({
-        messages: [...get().messages, message],
-      });
+      if (message.conversationId === get().selectedConversation?._id) {
+        set({
+          messages: [...get().messages, message],
+        });
+      }
     });
   },
 
@@ -191,6 +193,12 @@ export const useConversationStore = create<iConversationStore>((set, get) => ({
         updatedConversation,
         ...conversations.slice(conversationIndex + 1),
       ];
+
+      updatedConversations.sort((a, b) => {
+        return (
+          new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+        );
+      });
 
       // Set the updated state
       set({ conversations: updatedConversations });
