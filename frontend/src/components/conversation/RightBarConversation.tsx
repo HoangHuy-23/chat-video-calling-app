@@ -1,18 +1,28 @@
 import { Bell, UserPlus, Users } from "lucide-react";
 import { useAuthStore } from "../../store/useAuthStore";
 import { useConversationStore } from "../../store/useConversationStore";
+import { User } from "../../types";
 
 interface RightBarConversationProps {
   isOpenRightBar: boolean;
+  setShowCreateGroup: (value: boolean) => void;
 }
 
-function RightBarConversation({ isOpenRightBar }: RightBarConversationProps) {
-  const { selectedConversation } = useConversationStore();
+function RightBarConversation({
+  isOpenRightBar,
+  setShowCreateGroup,
+}: RightBarConversationProps) {
+  const { selectedConversation, addMemberCreateGroup } = useConversationStore();
   const { user } = useAuthStore();
 
   const recipient = selectedConversation?.members.find(
     (member) => member._id !== user?._id
   );
+
+  const handleCreateGroup = (user: User) => {
+    addMemberCreateGroup(user);
+    setShowCreateGroup(true);
+  };
 
   return (
     <div
@@ -76,7 +86,10 @@ function RightBarConversation({ isOpenRightBar }: RightBarConversationProps) {
             <>
               {/* create group */}
               <div className="flex flex-col items-center gap-2">
-                <button className="bg-base-300 rounded-full size-8 flex justify-center items-center">
+                <button
+                  className="bg-base-300 rounded-full size-8 flex justify-center items-center"
+                  onClick={() => handleCreateGroup(recipient as User)}
+                >
                   <Users className="size-4 text-base-content" />
                 </button>
                 <div className="flex flex-col items-center gap-1">

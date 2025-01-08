@@ -39,18 +39,32 @@ function HeaderConversation({
               className="size-12 rounded-full border-1 border-base-300"
             ></img>
           )}
-          {isOnline && (
+          {selectedConversation?.isGroup && (
+            <img
+              src={selectedConversation.profilePic || "/avatar.png"}
+              alt="profile"
+              className="size-12 rounded-full border-1 border-base-300"
+            ></img>
+          )}
+          {isOnline && !selectedConversation?.isGroup && (
             <span className="absolute size-4 rounded-full bg-green-500 right-0 top-8"></span>
           )}
         </div>
         <div>
-          <h3 className="text-sm font-semibold">
-            {
-              selectedConversation?.members.find(
-                (member) => member._id !== user?._id
-              )?.name
-            }
-          </h3>
+          {!selectedConversation?.isGroup && (
+            <h3 className="text-sm font-semibold">
+              {
+                selectedConversation?.members.find(
+                  (member) => member._id !== user?._id
+                )?.name
+              }
+            </h3>
+          )}
+          {selectedConversation?.isGroup && (
+            <h3 className="text-sm font-semibold">
+              {selectedConversation.name}
+            </h3>
+          )}
           {isOnline ? (
             <span className="text-xs text-primary">Just now</span>
           ) : (

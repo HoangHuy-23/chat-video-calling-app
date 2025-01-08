@@ -7,7 +7,13 @@ import MessageSkeleton from "../skeletons/MessageSkeleton";
 import MessageInput from "./MessageInput";
 import { formatMessageTime } from "../../lib/utils";
 
-function ConversationContainer() {
+interface ConversationContainerProps {
+  setShowCreateGroup: (value: boolean) => void;
+}
+
+function ConversationContainer({
+  setShowCreateGroup,
+}: ConversationContainerProps) {
   const [isOpenRightBar, setIsOpenRightBar] = useState(false);
   const {
     selectedConversation,
@@ -61,7 +67,10 @@ function ConversationContainer() {
           </div>
           <MessageInput />
         </div>
-        <RightBarConversation isOpenRightBar={isOpenRightBar} />
+        <RightBarConversation
+          isOpenRightBar={isOpenRightBar}
+          setShowCreateGroup={setShowCreateGroup}
+        />
       </div>
     );
   }
@@ -103,7 +112,8 @@ function ConversationContainer() {
                 </div>
                 <div className="chat-header mb-1">
                   <time className="text-xs opacity-50 ml-1">
-                    {formatMessageTime(message.createdAt)}
+                    {formatMessageTime(message.createdAt)} -{" "}
+                    {message.senderId.name}
                   </time>
                 </div>
                 <div
@@ -127,7 +137,10 @@ function ConversationContainer() {
         </div>
         <MessageInput />
       </div>
-      <RightBarConversation isOpenRightBar={isOpenRightBar} />
+      <RightBarConversation
+        isOpenRightBar={isOpenRightBar}
+        setShowCreateGroup={setShowCreateGroup}
+      />
     </div>
   );
 }

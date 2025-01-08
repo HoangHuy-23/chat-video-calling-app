@@ -10,8 +10,8 @@ import FriendsList from "../components/contact/FriendsList";
 import FriendRequests from "../components/contact/FriendRequests";
 import JoinedGroups from "../components/contact/JoinedGroups";
 import SearchResult from "../components/SearchResult";
-import { X } from "lucide-react";
 import AddNewFriend from "../components/AddNewFriend";
+import CreateGroup from "../components/CreateGroup";
 
 function HomePage() {
   const { user } = useAuthStore();
@@ -30,6 +30,7 @@ function HomePage() {
 
   // show layout add new friend
   const [showAddFriend, setShowAddFriend] = useState(false);
+  const [showCreateGroup, setShowCreateGroup] = useState(false);
 
   useEffect(() => {
     if (showContacts) {
@@ -89,7 +90,7 @@ function HomePage() {
             </div>
             {/* container */}
             {selectedConversation ? (
-              <ConversationContainer />
+              <ConversationContainer setShowCreateGroup={setShowCreateGroup} />
             ) : (
               <>
                 {showChat && (
@@ -112,6 +113,11 @@ function HomePage() {
       <AddNewFriend
         showAddFriend={showAddFriend}
         setShowAddFriend={setShowAddFriend}
+      />
+      {/* layout create group */}
+      <CreateGroup
+        showCreateGroup={showCreateGroup}
+        setShowCreateGroup={setShowCreateGroup}
       />
     </div>
   );

@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { axiosInstance } from "../lib/axios";
 import toast from "react-hot-toast";
-import { Conversation, MessageResponse } from "../types";
+import { Conversation, MessageResponse, User } from "../types";
 import { useAuthStore } from "./useAuthStore";
 
 interface iConversationStore {
@@ -18,11 +18,16 @@ interface iConversationStore {
   unsubscribeFromMessage: () => void;
   subscribeToNotification: () => void;
   unsubscribeFromNotification: () => void;
+  membersCreateGroup: User[];
+  addMemberCreateGroup: (member: User) => void;
+  removeMemberCreateGroup: (member: User) => void;
   createConversationAsGroup: (
     name: string,
     profilePic: string,
     members: string[]
   ) => Promise<void>;
+  subscribeConversation: () => void;
+  unsubscribeConversation: () => void;
 }
 
 export const useConversationStore = create<iConversationStore>((set, get) => ({
@@ -31,6 +36,7 @@ export const useConversationStore = create<iConversationStore>((set, get) => ({
   isFetchingConversations: false,
   messages: [],
   isFetchingMessages: false,
+  membersCreateGroup: [],
 
   fetchConversations: async () => {
     try {
@@ -101,6 +107,21 @@ export const useConversationStore = create<iConversationStore>((set, get) => ({
       toast.error("Failed to send message");
     }
   },
+  // Add member to create group
+  addMemberCreateGroup: (member) => {
+    set((state) => ({
+      membersCreateGroup: [...state.membersCreateGroup, member],
+    }));
+  },
+  // Remove member from create group
+  removeMemberCreateGroup: (member) => {
+    set((state) => ({
+      membersCreateGroup: state.membersCreateGroup.filter(
+        (m) => m._id !== member._id
+      ),
+    }));
+  },
+
   // Create a conversation as a group
   createConversationAsGroup: async (name, profilePic, members) => {
     try {
@@ -110,9 +131,10 @@ export const useConversationStore = create<iConversationStore>((set, get) => ({
         members,
       });
       if (!response.data) return;
-      set((state) => ({
-        conversations: [...state.conversations, response.data],
-      }));
+      // todo: send conversation to socket
+      const socket = useAuthStore.getState().socket;
+      if (!socket) return;
+      socket.emit("newGroup", response.data);
     } catch (error) {
       console.error("Failed to create conversation:", error);
       toast.error("Failed to create conversation");
@@ -179,5 +201,22 @@ export const useConversationStore = create<iConversationStore>((set, get) => ({
     const socket = useAuthStore.getState().socket;
     if (!socket) return;
     socket.off("getNotification");
+  },
+
+  subscribeConversation: () => {
+    const socket = useAuthStore.getState().socket;
+    if (!socket) return;
+    socket.on("getNewGroup", (conversation) => {
+      console.log("Received conversation:", conversation);
+      set((state) => ({
+        conversations: [...state.conversations, conversation],
+      }));
+    });
+  },
+
+  unsubscribeConversation: () => {
+    const socket = useAuthStore.getState().socket;
+    if (!socket) return;
+    socket.off("getNewGroup");
   },
 }));

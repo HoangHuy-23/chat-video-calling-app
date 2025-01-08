@@ -102,6 +102,20 @@ io.on("connection", (socket) => {
       io.to(recipient.socketId).emit("getFriendRequest", data);
     }
   });
+
+  // new group
+  socket.on("newGroup", (data) => {
+    data.members.forEach((member) => {
+      const recipient = userSocket.find(
+        (user) => user.userId.toString() === member._id.toString()
+      );
+      console.log("recipient", recipient);
+
+      if (recipient) {
+        io.to(recipient.socketId).emit("getNewGroup", data);
+      }
+    });
+  });
 });
 
 server

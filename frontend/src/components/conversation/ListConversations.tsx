@@ -11,6 +11,8 @@ function ListConversations() {
     fetchConversations,
     subscribeToNotification,
     unsubscribeFromNotification,
+    subscribeConversation,
+    unsubscribeConversation,
   } = useConversationStore();
   const { user } = useAuthStore();
 
@@ -22,10 +24,18 @@ function ListConversations() {
 
   useEffect(() => {
     subscribeToNotification();
+    subscribeConversation();
     return () => {
       unsubscribeFromNotification();
+      unsubscribeConversation();
     };
-  }, [subscribeToNotification, unsubscribeFromNotification, conversations]);
+  }, [
+    subscribeToNotification,
+    unsubscribeFromNotification,
+    conversations,
+    subscribeConversation,
+    unsubscribeConversation,
+  ]);
   return (
     <div className="w-full h-full overflow-y-auto">
       <div className="flex px-4 justify-between items-center border-b border-base-300">

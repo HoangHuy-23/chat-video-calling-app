@@ -31,18 +31,42 @@ function ItemConversation({ conversation, user }: ItemConversationProps) {
             className="w-10 h-10 rounded-full"
           />
         )}
+        {conversation.isGroup && (
+          <img
+            src={conversation.profilePic || "/avatar.png"}
+            alt="profile"
+            className="w-10 h-10 rounded-full"
+          />
+        )}
         <div>
-          <h3 className="text-sm font-semibold">
-            {
-              conversation?.members.find((member) => member._id !== user?._id)
-                ?.name
-            }
-          </h3>
-          <p className="text-xs text-base-content mt-1">
-            {" "}
-            {conversation.lastMessage.senderId === user._id ? "You: " : ""}
-            {conversation.lastMessage.content}
-          </p>
+          {!conversation.isGroup && (
+            <h3 className="text-sm font-semibold">
+              {
+                conversation?.members.find((member) => member._id !== user?._id)
+                  ?.name
+              }
+            </h3>
+          )}
+          {conversation.isGroup && (
+            <h3 className="text-sm font-semibold">{conversation.name}</h3>
+          )}
+          {!conversation.isGroup && (
+            <p className="text-xs text-base-content mt-1">
+              {" "}
+              {conversation.lastMessage.senderId === user._id ? "You: " : ""}
+              {conversation.lastMessage.content}
+            </p>
+          )}
+          {conversation.isGroup && (
+            <p className="text-xs text-base-content mt-1">
+              {conversation.lastMessage.senderId === user._id
+                ? "You: "
+                : conversation?.members.find(
+                    (member) => member._id == conversation.lastMessage.senderId
+                  )?.name + ": "}
+              {conversation.lastMessage.content}
+            </p>
+          )}
         </div>
       </div>
       <span className="text-xs">{DateTimeFormat(conversation.updatedAt)}</span>
