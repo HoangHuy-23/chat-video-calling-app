@@ -5,8 +5,7 @@ import { LayoutList } from "lucide-react";
 import { useAuthStore } from "../../store/useAuthStore";
 
 function FriendsList() {
-  const { myContacts, isFetchingMyContacts, fetchMyContacts } =
-    useContactStore();
+  const { myContacts, fetchMyContacts } = useContactStore();
   const { user } = useAuthStore();
 
   useEffect(() => {

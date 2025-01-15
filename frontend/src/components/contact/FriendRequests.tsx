@@ -1,19 +1,16 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import ContactHeader from "./ContactHeader";
 import { UserCheck } from "lucide-react";
 import { useFriendRequestStore } from "../../store/useFriendRequestStore";
-import { useAuthStore } from "../../store/useAuthStore";
 
 function FriendRequests() {
   const {
     friendRequests,
     fetchFriendRequests,
-    isFetchingFriendRequests,
     subscribeToFriendRequest,
     unsubscribeFromFriendRequest,
     acceptFriendRequest,
   } = useFriendRequestStore();
-  const { user } = useAuthStore();
 
   // useEffect(() => {
   //   fetchFriendRequests();

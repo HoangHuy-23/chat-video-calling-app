@@ -9,7 +9,7 @@ interface iContactStore {
   fetchMyContacts: () => Promise<void>;
 }
 
-export const useContactStore = create<iContactStore>((set, get) => ({
+export const useContactStore = create<iContactStore>((set) => ({
   myContacts: null,
   isFetchingMyContacts: false,
 

@@ -1,4 +1,4 @@
-import { PlusCircle, X } from "lucide-react";
+import { X } from "lucide-react";
 import { useContactStore } from "../store/useContactStore";
 import { useEffect, useState } from "react";
 import { useConversationStore } from "../store/useConversationStore";
@@ -23,7 +23,7 @@ function CreateGroup({
     fetchMyContacts();
   }, [fetchMyContacts]);
 
-  const [search, setSearch] = useState("");
+  // const [search, setSearch] = useState("");
   const [name, setName] = useState("");
 
   const isCheckSelected = (userId: string) => {

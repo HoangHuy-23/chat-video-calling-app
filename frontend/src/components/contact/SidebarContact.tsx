@@ -1,4 +1,4 @@
-import { LayoutList, User, UserCheck, Users } from "lucide-react";
+import { LayoutList, UserCheck, Users } from "lucide-react";
 
 interface SidebarContactProps {
   showMyFriends: boolean;

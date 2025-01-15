@@ -10,7 +10,7 @@ interface iUserStore {
   searchUser: (keyword: string) => void;
 }
 
-const useUserStore = create<iUserStore>((set, get) => ({
+const useUserStore = create<iUserStore>((set) => ({
   searchResult: [],
   userSelected: null,
   setUserSelected: (user) => set({ userSelected: user }),

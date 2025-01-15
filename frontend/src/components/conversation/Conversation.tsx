@@ -1,15 +1,15 @@
-import { useConversationStore } from "../../store/useConversationStore";
-import ConversationContainer from "./ConversationContainer";
+// import { useConversationStore } from "../../store/useConversationStore";
+// import ConversationContainer from "./ConversationContainer";
 import ConversationSidebar from "./ConversationSidebar";
 // delete
 function Conversation() {
-  const { selectedConversation } = useConversationStore();
+  // const { selectedConversation } = useConversationStore();
   return (
     <div className="flex flex-grow h-screen">
       {/* side left */}
       <ConversationSidebar />
       {/* container */}
-      {selectedConversation ? (
+      {/* {selectedConversation ? (
         <ConversationContainer />
       ) : (
         <div className="flex-1 flex items-center justify-center">
@@ -17,7 +17,7 @@ function Conversation() {
             Open a conversation to start chat
           </h1>
         </div>
-      )}
+      )} */}
     </div>
   );
 }

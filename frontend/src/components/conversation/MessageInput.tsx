@@ -5,11 +5,11 @@ import toast from "react-hot-toast";
 
 function MessageInput() {
   const [message, setMessage] = useState("");
-  const [isTyping, setIsTyping] = useState(false);
+  // const [isTyping, setIsTyping] = useState(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const { selectedConversation, sendMessage } = useConversationStore();
+  const { sendMessage } = useConversationStore();
 
   const handleSendMessage = async (e: React.FormEvent<HTMLElement>) => {
     e.preventDefault();
@@ -23,10 +23,6 @@ function MessageInput() {
       toast.error("Failed to send message");
       console.error("Failed to send message:", error);
     }
-  };
-
-  const handleTyping = () => {
-    console.log("typing");
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
