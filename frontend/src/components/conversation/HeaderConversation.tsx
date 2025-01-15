@@ -2,6 +2,8 @@ import { Conversation, User } from "../../types";
 import { DateTimeFormat } from "../../lib/utils";
 import { BadgeInfo, Phone, Search, Video } from "lucide-react";
 import { useAuthStore } from "../../store/useAuthStore";
+import { useCallStore } from "../../store/useCallStore";
+import { useEffect } from "react";
 
 interface HeaderConversationProps {
   isOpenRightBar: boolean;
@@ -23,6 +25,18 @@ function HeaderConversation({
       selectedConversation?.members.find((member) => member._id !== user?._id)
         ?._id
   );
+  const userSocket = onlineUsers?.find(
+    (onlineUser) =>
+      onlineUser.userId ===
+      selectedConversation?.members.find((member) => member._id !== user?._id)
+        ?._id
+  );
+
+  useEffect(() => {
+    console.log("userSocket", userSocket);
+  }, [userSocket]);
+
+  const { handleCall } = useCallStore();
   return (
     <div className="flex items-center justify-between p-2 border-b border-base-300">
       {/* left */}
@@ -91,6 +105,12 @@ function HeaderConversation({
         <div
           className={`p-2 rounded-md  hover:bg-base-200 cursor-pointer bg-base-100
           }`}
+          onClick={() => {
+            if (userSocket) {
+              handleCall(userSocket);
+              console.log("call");
+            }
+          }}
         >
           <Video size={24} />
         </div>

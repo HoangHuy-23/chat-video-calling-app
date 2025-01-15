@@ -45,7 +45,7 @@ function ListConversations() {
         </div>
       </div>
       {/* list */}
-      <div className="px-4 overflow-y-auto">
+      <div className=" overflow-y-auto">
         {isFetchingConversations ? (
           <ConversationSkeleton />
         ) : (

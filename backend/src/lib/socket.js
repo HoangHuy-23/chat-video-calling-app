@@ -25,11 +25,21 @@ io.on("connection", (socket) => {
   console.log("a user connected: ", socket.id);
   // join application
   socket.on("join", (user) => {
-    user &&
-      !userSocket.some((user) => user.userId === user._id) &&
-      userSocket.push({ userId: user._id, socketId: socket.id });
-    console.log(userSocket);
-    io.emit("getOnlineUsers", userSocket);
+    if (user) {
+      const existingUserIndex = userSocket.findIndex(
+        (u) => u.userId === user._id
+      );
+
+      if (existingUserIndex !== -1) {
+        // Cập nhật socketId nếu người dùng đã tồn tại
+        userSocket[existingUserIndex].socketId = socket.id;
+      } else {
+        // Thêm người dùng mới nếu chưa tồn tại
+        userSocket.push({ userId: user._id, socketId: socket.id });
+      }
+      console.log("userSocket", userSocket);
+      io.emit("getOnlineUsers", userSocket);
+    }
   });
   // disconnect
   socket.on("disconnect", () => {
@@ -115,6 +125,45 @@ io.on("connection", (socket) => {
         io.to(recipient.socketId).emit("getNewGroup", data);
       }
     });
+  });
+  // call user
+  socket.on("call", async (participants) => {
+    console.log("call", participants);
+    if (participants.receiver.socketId) {
+      io.to(participants.receiver.socketId).emit("incomingCall", participants);
+    }
+  });
+
+  // signal to user
+  socket.on("webrtcSignal", async (data) => {
+    if (data.isCaller) {
+      if (data.ongoingCall.participants.receiver.socketId) {
+        io.to(data.ongoingCall.participants.receiver.socketId).emit(
+          "webrtcSignal",
+          data
+        );
+      }
+    } else {
+      if (data.ongoingCall.participants.caller.socketId) {
+        io.to(data.ongoingCall.participants.caller.socketId).emit(
+          "webrtcSignal",
+          data
+        );
+      }
+    }
+  });
+
+  // hang up call
+  socket.on("hangup", async (data) => {
+    let socketIdToEmit;
+    if (data.ongoingCall.participants.caller.userId === data.userHangupId) {
+      socketIdToEmit = data.ongoingCall.participants.receiver.socketId;
+    } else {
+      socketIdToEmit = data.ongoingCall.participants.caller.socketId;
+    }
+    if (socketIdToEmit) {
+      io.to(socketIdToEmit).emit("hangup");
+    }
   });
 });
 

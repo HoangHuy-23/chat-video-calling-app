@@ -17,7 +17,9 @@ function ItemConversation({ conversation, user }: ItemConversationProps) {
   return (
     <div
       key={conversation._id}
-      className="flex items-start justify-between py-4 cursor-pointer"
+      className={`flex items-start justify-between p-4 cursor-pointer ${
+        selectedConversation?._id === conversation._id ? "bg-base-200" : ""
+      }`}
       onClick={handleClick}
     >
       <div className="flex items-start gap-2">

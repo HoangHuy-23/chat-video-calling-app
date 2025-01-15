@@ -1,3 +1,5 @@
+import Peer from "simple-peer";
+
 export type dataRegister = {
   name: string;
   email: string;
@@ -72,6 +74,23 @@ export type FriendRequest = {
   receiverId: string;
   status: string;
   createdAt: string;
+};
+
+// call types
+export type Participants = {
+  caller: SocketUser;
+  receiver: SocketUser;
+};
+
+export type OngoingCall = {
+  participants: Participants;
+  isRinging: boolean;
+};
+
+export type PeerData = {
+  peerConnection: Peer.Instance;
+  stream: MediaStream | undefined;
+  participantUser: SocketUser;
 };
 
 // socket.io-client

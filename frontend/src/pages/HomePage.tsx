@@ -12,6 +12,9 @@ import JoinedGroups from "../components/contact/JoinedGroups";
 import SearchResult from "../components/SearchResult";
 import AddNewFriend from "../components/AddNewFriend";
 import CreateGroup from "../components/CreateGroup";
+import RingCall from "../components/RingCall";
+import VideoCall from "../components/VideoCall";
+import CallProvider from "../store/CallProvider";
 
 function HomePage() {
   const { user } = useAuthStore();
@@ -31,6 +34,9 @@ function HomePage() {
   // show layout add new friend
   const [showAddFriend, setShowAddFriend] = useState(false);
   const [showCreateGroup, setShowCreateGroup] = useState(false);
+  const [showRingCall, setShowRingCall] = useState(true);
+
+  const [showCall, setShowCall] = useState(true);
 
   useEffect(() => {
     if (showContacts) {
@@ -44,82 +50,94 @@ function HomePage() {
     }
   }, [showChat, showContacts, showSettings]);
   return (
-    <div className="flex w-full h-screen bg-base-100">
-      <>
-        {/* navbar */}
-        <Navbar
-          showChat={showChat}
-          setShowChat={setShowChat}
-          showContacts={showContacts}
-          setShowContacts={setShowContacts}
-          showSettings={showSettings}
-          setShowSettings={setShowSettings}
-        />
-        {/* body */}
-        <div className="flex flex-grow flex-col h-screen">
-          {/* header app */}
-          <div className="h-6 w-full border-b border-base-300 bg-base-300">
-            <span className="text-xs ml-2">Chat App - {user?.name}</span>
-          </div>
-          {/* body app */}
-          <div className="flex flex-grow h-screen">
-            {/* side bar */}
-            <div className="w-72 lg:w-96 border-r border-base-300 flex flex-col transition-all duration-200 ">
-              {/* search */}
-              <SearchUser
-                isOpenSearchResult={isOpenSearchResult}
-                setIsOpenSearchResult={setIsOpenSearchResult}
-                setShowAddFriend={setShowAddFriend}
-              />
-              {/* List conversation */}
-
-              {showChat && !isOpenSearchResult && <ListConversations />}
-              {showContacts && !isOpenSearchResult && (
-                <SidebarContact
-                  showMyFriends={showMyFriends}
-                  setShowMyFriends={setShowMyFriends}
-                  showRequests={showRequests}
-                  setShowRequests={setShowRequests}
-                  showGroup={showGroup}
-                  setShowGroup={setShowGroup}
-                />
-              )}
-
-              {/* search result */}
-              {isOpenSearchResult && <SearchResult />}
+    <CallProvider>
+      <div className="flex w-full h-screen bg-base-100">
+        <>
+          {/* navbar */}
+          <Navbar
+            showChat={showChat}
+            setShowChat={setShowChat}
+            showContacts={showContacts}
+            setShowContacts={setShowContacts}
+            showSettings={showSettings}
+            setShowSettings={setShowSettings}
+          />
+          {/* body */}
+          <div className="flex flex-grow flex-col h-screen">
+            {/* header app */}
+            <div className="h-6 w-full border-b border-base-300 bg-base-300">
+              <span className="text-xs ml-2">Chat App - {user?.name}</span>
             </div>
-            {/* container */}
-            {selectedConversation ? (
-              <ConversationContainer setShowCreateGroup={setShowCreateGroup} />
-            ) : (
-              <>
-                {showChat && (
-                  <div className="flex-1 flex items-center justify-center">
-                    <h1 className="text-2xl font-semibold text-center">
-                      Open a conversation to start chat
-                    </h1>
-                  </div>
+            {/* body app */}
+            <div className="flex flex-grow h-screen">
+              {/* side bar */}
+              <div className="w-72 lg:w-96 border-r border-base-300 flex flex-col transition-all duration-200 ">
+                {/* search */}
+                <SearchUser
+                  isOpenSearchResult={isOpenSearchResult}
+                  setIsOpenSearchResult={setIsOpenSearchResult}
+                  setShowAddFriend={setShowAddFriend}
+                />
+                {/* List conversation */}
+
+                {showChat && !isOpenSearchResult && <ListConversations />}
+                {showContacts && !isOpenSearchResult && (
+                  <SidebarContact
+                    showMyFriends={showMyFriends}
+                    setShowMyFriends={setShowMyFriends}
+                    showRequests={showRequests}
+                    setShowRequests={setShowRequests}
+                    showGroup={showGroup}
+                    setShowGroup={setShowGroup}
+                  />
                 )}
-              </>
-            )}
-            {/* contact */}
-            {showMyFriends && <FriendsList />}
-            {showRequests && <FriendRequests />}
-            {showGroup && <JoinedGroups />}
+
+                {/* search result */}
+                {isOpenSearchResult && <SearchResult />}
+              </div>
+              {/* container */}
+              {selectedConversation ? (
+                <ConversationContainer
+                  setShowCreateGroup={setShowCreateGroup}
+                />
+              ) : (
+                <>
+                  {showChat && (
+                    <div className="flex-1 flex items-center justify-center">
+                      <h1 className="text-2xl font-semibold text-center">
+                        Open a conversation to start chat
+                      </h1>
+                    </div>
+                  )}
+                </>
+              )}
+              {/* contact */}
+              {showMyFriends && <FriendsList />}
+              {showRequests && <FriendRequests />}
+              {showGroup && <JoinedGroups />}
+            </div>
           </div>
-        </div>
-      </>
-      {/* layout add new friend */}
-      <AddNewFriend
-        showAddFriend={showAddFriend}
-        setShowAddFriend={setShowAddFriend}
-      />
-      {/* layout create group */}
-      <CreateGroup
-        showCreateGroup={showCreateGroup}
-        setShowCreateGroup={setShowCreateGroup}
-      />
-    </div>
+        </>
+        {/* layout add new friend */}
+        <AddNewFriend
+          showAddFriend={showAddFriend}
+          setShowAddFriend={setShowAddFriend}
+        />
+        {/* layout create group */}
+        <CreateGroup
+          showCreateGroup={showCreateGroup}
+          setShowCreateGroup={setShowCreateGroup}
+        />
+        {/* calling notification */}
+        <RingCall
+          showRingCall={showRingCall}
+          setShowRingCall={setShowRingCall}
+        />
+
+        {/* call */}
+        <VideoCall showCall={showCall} setShowCall={setShowCall} />
+      </div>
+    </CallProvider>
   );
 }
 
