@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseURL = process.env.API_URL + "/api" || "http://localhost:5001/api";
+const baseURL = "https://chat-video-calling-app-be.onrender.com/api";
 
 export const axiosInstance = axios.create({
   baseURL: baseURL,
