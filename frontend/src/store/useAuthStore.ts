@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import { io, Socket } from "socket.io-client";
 
-const BASE_URL = "http://localhost:5001";
+const BASE_URL = "https://chat-video-calling-app-fe.onrender.com";
 
 interface iAuthStore {
   user: User | null;
